@@ -268,7 +268,7 @@ func MethodNotAllowedError(method string, allowed []string) error {
 
 // Error returns the error occurrence details.
 func (e *ErrorResponse) Error() string {
-	msg := fmt.Sprintf("[%s] %d %s: %s", e.ID, e.Status, e.Code, e.Detail)
+	msg := fmt.Sprintf("%s", e.Detail)
 	for k, v := range e.Meta {
 		msg += ", " + fmt.Sprintf("%s: %v", k, v)
 	}
