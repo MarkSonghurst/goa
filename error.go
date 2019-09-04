@@ -34,6 +34,7 @@ import (
 	"encoding/base64"
 	"fmt"
 	"io"
+	"regexp"
 	"strings"
 )
 
@@ -75,6 +76,11 @@ var (
 
 	// ErrInternal is the class of error used for uncaught errors.
 	ErrInternal = NewErrorClass("internal", 500)
+)
+
+var (
+	// Added by Mark Songhurst
+	reErrorPrefix = regexp.MustCompile(`^\[\w+\]\s+\d+\s+\w+:\s+`)
 )
 
 type (
@@ -322,7 +328,13 @@ func MergeErrors(err, other error) error {
 		e.Status = 400
 		e.Code = "bad_request"
 	}
-	e.Detail = e.Detail + "; " + o.Detail
+
+	// Added by Mark Songhurst
+	eDetailClean := reErrorPrefix.ReplaceAllString(e.Detail, "")
+	oDetailClean := reErrorPrefix.ReplaceAllString(o.Detail, "")
+	e.Detail = eDetailClean + "; " + oDetailClean
+	// Original Goa code:
+	//e.Detail = e.Detail + "; " + o.Detail
 
 	if e.Meta == nil && len(o.Meta) > 0 {
 		e.Meta = make(map[string]interface{})
