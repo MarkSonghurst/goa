@@ -34,7 +34,6 @@ import (
 	"encoding/base64"
 	"fmt"
 	"io"
-	"regexp"
 	"strings"
 )
 
@@ -76,11 +75,6 @@ var (
 
 	// ErrInternal is the class of error used for uncaught errors.
 	ErrInternal = NewErrorClass("internal", 500)
-)
-
-var (
-	// Added by Mark Songhurst
-	reErrorPrefix = regexp.MustCompile(`^\[\w+\]\s+\d+\s+\w+:\s+`)
 )
 
 type (
@@ -268,11 +262,7 @@ func MethodNotAllowedError(method string, allowed []string) error {
 
 // Error returns the error occurrence details.
 func (e *ErrorResponse) Error() string {
-	msg := fmt.Sprintf("%s", e.Detail)
-	for k, v := range e.Meta {
-		msg += ", " + fmt.Sprintf("%s: %v", k, v)
-	}
-	return msg
+	return e.Detail
 }
 
 // ResponseStatus is the status used to build responses.
@@ -329,12 +319,7 @@ func MergeErrors(err, other error) error {
 		e.Code = "bad_request"
 	}
 
-	// Added by Mark Songhurst
-	eDetailClean := reErrorPrefix.ReplaceAllString(e.Detail, "")
-	oDetailClean := reErrorPrefix.ReplaceAllString(o.Detail, "")
-	e.Detail = eDetailClean + "; " + oDetailClean
-	// Original Goa code:
-	//e.Detail = e.Detail + "; " + o.Detail
+	e.Detail = e.Detail + "; " + o.Detail
 
 	if e.Meta == nil && len(o.Meta) > 0 {
 		e.Meta = make(map[string]interface{})
