@@ -262,6 +262,10 @@ func MethodNotAllowedError(method string, allowed []string) error {
 
 // Error returns the error occurrence details.
 func (e *ErrorResponse) Error() string {
+	prefix := strings.Title(strings.ReplaceAll(e.Code, "_", " "))
+	if prefix != "" {
+		return prefix + ": " + e.Detail
+	}
 	return e.Detail
 }
 

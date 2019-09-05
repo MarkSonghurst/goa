@@ -138,7 +138,7 @@ var _ = Describe("Service", func() {
 		})
 
 		It("prevents reading more bytes", func() {
-			Ω(string(rw.Body)).Should(MatchRegexp(`\[.*\] 413 request_too_large: request body length exceeds 4 bytes`))
+			Ω(string(rw.Body)).Should(Equal(`Request Too Large: request body length exceeds 4 bytes`))
 		})
 	})
 
