@@ -170,27 +170,27 @@ func MissingPayloadError() error {
 
 // InvalidParamTypeError is the error produced when the type of a parameter does not match the type
 // defined in the design.
-func InvalidParamTypeError(name string, val interface{}, expected string) error {
+var InvalidParamTypeError = func(name string, val interface{}, expected string) error {
 	msg := fmt.Sprintf("invalid value %#v for parameter %#v, must be a %s", val, name, expected)
 	return ErrInvalidRequest(msg, "param", name, "value", val, "expected", expected)
 }
 
 // MissingParamError is the error produced for requests that are missing path or querystring
 // parameters.
-func MissingParamError(name string) error {
+var MissingParamError = func(name string) error {
 	msg := fmt.Sprintf("missing required parameter %#v", name)
 	return ErrInvalidRequest(msg, "name", name)
 }
 
 // InvalidAttributeTypeError is the error produced when the type of payload field does not match
 // the type defined in the design.
-func InvalidAttributeTypeError(ctx string, val interface{}, expected string) error {
+var InvalidAttributeTypeError = func(ctx string, val interface{}, expected string) error {
 	msg := fmt.Sprintf("type of %s must be %s but got value %#v", ctx, expected, val)
 	return ErrInvalidRequest(msg, "attribute", ctx, "value", val, "expected", expected)
 }
 
 // MissingAttributeError is the error produced when a request payload is missing a required field.
-func MissingAttributeError(ctx, name string) error {
+var MissingAttributeError = func(ctx, name string) error {
 	msg := fmt.Sprintf("attribute %#v of %s is missing and required", name, ctx)
 	return ErrInvalidRequest(msg, "attribute", name, "parent", ctx)
 }
@@ -214,21 +214,21 @@ func InvalidEnumValueError(ctx string, val interface{}, allowed []interface{}) e
 
 // InvalidFormatError is the error produced when the value of a parameter or payload field does not
 // match the format validation defined in the design.
-func InvalidFormatError(ctx, target string, format Format, formatError error) error {
+var InvalidFormatError = func(ctx, target string, format Format, formatError error) error {
 	msg := fmt.Sprintf("%s must be formatted as a %s but got value %#v, %s", ctx, format, target, formatError.Error())
 	return ErrInvalidRequest(msg, "attribute", ctx, "value", target, "expected", format, "error", formatError.Error())
 }
 
 // InvalidPatternError is the error produced when the value of a parameter or payload field does
 // not match the pattern validation defined in the design.
-func InvalidPatternError(ctx, target string, pattern string) error {
+var InvalidPatternError = func(ctx, target string, pattern string) error {
 	msg := fmt.Sprintf("%s must match the regexp %#v but got value %#v", ctx, pattern, target)
 	return ErrInvalidRequest(msg, "attribute", ctx, "value", target, "regexp", pattern)
 }
 
 // InvalidRangeError is the error produced when the value of a parameter or payload field does
 // not match the range validation defined in the design. value may be a int or a float64.
-func InvalidRangeError(ctx string, target interface{}, value interface{}, min bool) error {
+var InvalidRangeError = func(ctx string, target interface{}, value interface{}, min bool) error {
 	comp := "greater than or equal to"
 	if !min {
 		comp = "less than or equal to"
@@ -239,7 +239,7 @@ func InvalidRangeError(ctx string, target interface{}, value interface{}, min bo
 
 // InvalidLengthError is the error produced when the value of a parameter or payload field does
 // not match the length validation defined in the design.
-func InvalidLengthError(ctx string, target interface{}, ln, value int, min bool) error {
+var InvalidLengthError = func(ctx string, target interface{}, ln, value int, min bool) error {
 	comp := "greater than or equal to"
 	if !min {
 		comp = "less than or equal to"
@@ -267,6 +267,7 @@ func MethodNotAllowedError(method string, allowed []string) error {
 }
 
 // Error returns the error occurrence details.
+// Added by Mark Songhurst (see below for original function)
 func (e *ErrorResponse) Error() string {
 	prefix := strings.Title(strings.ReplaceAll(e.Code, "_", " "))
 	if prefix != "" {
