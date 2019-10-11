@@ -131,6 +131,12 @@ func NewErrorClass(code string, status int) ErrorClass {
 	return func(message interface{}, keyvals ...interface{}) error {
 		var msg string
 		switch actual := message.(type) {
+		// Start changes by Mark Songhurst
+		case ServiceMergeableError:
+			return actual
+		case ServiceError:
+			return actual
+		// End changes by Mark Songhurst
 		case string:
 			msg = actual
 		case error:
@@ -268,6 +274,18 @@ func (e *ErrorResponse) Error() string {
 	}
 	return e.Detail
 }
+
+/*
+	Original Goa Code (replaced by Mark Songhurst)
+// Error returns the error occurrence details.
+func (e *ErrorResponse) Error() string {
+	msg := fmt.Sprintf("[%s] %d %s: %s", e.ID, e.Status, e.Code, e.Detail)
+	for k, v := range e.Meta {
+		msg += ", " + fmt.Sprintf("%s: %v", k, v)
+	}
+	return msg
+}
+*/
 
 // ResponseStatus is the status used to build responses.
 func (e *ErrorResponse) ResponseStatus() int { return e.Status }

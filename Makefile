@@ -14,11 +14,12 @@ DIRS=$(shell go list -f {{.Dir}} ./...)
 
 # Only list test and build dependencies
 # Standard dependencies are installed via go get
+	# github.com/golang/lint/golint 
 DEPEND=\
 	github.com/go-openapi/loads \
 	github.com/goadesign/goa-cellar \
 	github.com/goadesign/goa.design/tools/mdc \
-	github.com/golang/lint/golint \
+	golang.org/x/lint \
 	github.com/fzipp/gocyclo \
 	github.com/onsi/ginkgo \
 	github.com/onsi/ginkgo/ginkgo \
