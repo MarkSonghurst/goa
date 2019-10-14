@@ -164,7 +164,7 @@ func NewErrorClass(code string, status int) ErrorClass {
 }
 
 // MissingPayloadError is the error produced when a request is missing a required payload.
-func MissingPayloadError() error {
+var MissingPayloadError = func() error {
 	return ErrInvalidRequest("missing required payload")
 }
 
@@ -196,14 +196,14 @@ var MissingAttributeError = func(ctx, name string) error {
 }
 
 // MissingHeaderError is the error produced when a request is missing a required header.
-func MissingHeaderError(name string) error {
+var MissingHeaderError = func(name string) error {
 	msg := fmt.Sprintf("missing required HTTP header %#v", name)
 	return ErrInvalidRequest(msg, "name", name)
 }
 
 // InvalidEnumValueError is the error produced when the value of a parameter or payload field does
 // not match one the values defined in the design Enum validation.
-func InvalidEnumValueError(ctx string, val interface{}, allowed []interface{}) error {
+var InvalidEnumValueError = func(ctx string, val interface{}, allowed []interface{}) error {
 	elems := make([]string, len(allowed))
 	for i, a := range allowed {
 		elems[i] = fmt.Sprintf("%#v", a)
