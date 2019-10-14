@@ -128,7 +128,8 @@ var (
 	GobContentTypes = []string{"application/gob", "application/x-gob"}
 
 	// ErrorMediaIdentifier is the media type identifier used for error responses.
-	ErrorMediaIdentifier = "application/vnd.goa.error"
+	// Mark Songhurst added the +json suffix, which is only accurate when the response body is JSON.
+	ErrorMediaIdentifier = "application/vnd.goa.error+json"
 
 	// ErrorMedia is the built-in media type for error responses.
 	ErrorMedia = &MediaTypeDefinition{
