@@ -119,7 +119,7 @@ type (
 		// Status is the HTTP status code used by responses that cary the error.
 		Status int `json:"status" yaml:"status" xml:"status" form:"status"`
 		// Detail describes the specific error occurrence.
-		Detail string `json:"detail" yaml:"detail" xml:"detail" form:"detail"`
+		Detail string `json:"detail,omitempty" yaml:"detail,omitempty" xml:"detail,omitempty" form:"detail,omitempty"`
 		// Meta contains additional key/value pairs useful to clients.
 		Meta map[string]interface{} `json:"meta,omitempty" yaml:"meta,omitempty" xml:"meta,omitempty" form:"meta,omitempty"`
 	}
