@@ -1,11 +1,11 @@
 package middleware
 
 import (
-	"net/http"
-
-	"github.com/goadesign/goa"
-
+	"bufio"
 	"context"
+	"github.com/goadesign/goa"
+	"net"
+	"net/http"
 )
 
 // loggingResponseWriter wraps an http.ResponseWriter and writes only raw
@@ -20,6 +20,10 @@ type loggingResponseWriter struct {
 func (lrw *loggingResponseWriter) Write(buf []byte) (int, error) {
 	goa.LogInfo(lrw.ctx, "response", "body", string(buf))
 	return lrw.ResponseWriter.Write(buf)
+}
+
+func (lrw *loggingResponseWriter) Hijack() (net.Conn, *bufio.ReadWriter, error) {
+	return lrw.Hijack()
 }
 
 // LogResponse creates a response logger middleware.
